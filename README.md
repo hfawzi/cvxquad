@@ -1,8 +1,6 @@
 # CVXQUAD
 
-CVXQUAD is a collection of functions to be used with the MATLAB-based convex optimization tool [CVX](http://www.cvxr.com/cvx/).
-It gives the possibility to treat various functions related to the logarithm and the matrix logarithm directly on CVX. See below for an example.
-This package is based on the paper:
+CVXQUAD is a collection of functions to be used with the MATLAB-based convex optimization tool [CVX](http://www.cvxr.com/cvx/). It implements a new approximation strategy to treat the exponential cone as well as various functions based on matrix logarithm using symmetric cone solvers. This package is based on the paper:
 
 ```
 Semidefinite approximations of matrix logarithm
@@ -11,7 +9,7 @@ Hamza Fawzi, James Saunderson and Pablo A. Parrilo.
 
 # Installation
 
-Simply put the files in your Matlab path.
+Download the zip file https://github.com/hfawzi/cvxquad/archive/master.zip and add it to your MATLAB path.
 
 ## Replacing successive approximation
 To replace the successive approximation functionality of CVX whenever the exponential cone is used (e.g., when using rel_entr or in GP mode), copy the file "exponential/exponential.m" to the folder "sets" in your CVX installation (you may want to keep a copy of the existing file in case you want to revert to the successive approximation method).
