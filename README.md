@@ -11,7 +11,7 @@ available at https://arxiv.org/abs/1705.00812.
 
 # Installation
 
-Download the zip file https://github.com/hfawzi/cvxquad/archive/master.zip and add it to your MATLAB path.
+Unpack the zip file https://github.com/hfawzi/cvxquad/archive/master.zip and add the folder to your MATLAB path.
 
 ## Replacing successive approximation
 To replace the successive approximation functionality of CVX whenever the exponential cone is used (e.g., when using rel_entr or in GP mode), copy the file "exponential/exponential.m" to the folder "sets" in your CVX installation (you may want to keep a copy of the existing file in case you want to revert to the successive approximation method).
