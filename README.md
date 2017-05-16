@@ -4,8 +4,10 @@ CVXQUAD is a collection of functions to be used with the MATLAB-based convex opt
 
 ```
 Semidefinite approximations of matrix logarithm
-Hamza Fawzi, James Saunderson and Pablo A. Parrilo.
+Hamza Fawzi, James Saunderson and Pablo A. Parrilo
 ```
+
+available at https://arxiv.org/abs/1705.00812.
 
 # Installation
 
