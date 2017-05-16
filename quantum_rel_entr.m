@@ -42,8 +42,15 @@ end
 
 if isnumeric(A) && isnumeric(B)
     % Compute trace(A*(logm(A)-logm(B)))
-    % Diagonalize A and B and check that im(A) \subseteq im(B)
     tol = 1e-9;
+    % Check that A and B are symmetric/Hermitian
+    if norm(A-A','fro') > tol*norm(A,'fro') ...
+            || norm(B-B','fro') > tol*norm(B,'fro')
+        error('A and B must be symmetric or Hermitian matrices');
+    end
+    % Enforce A and B are symmetric/Hermitian
+    A = (A+A')/2; B = (B+B')/2;
+    % Diagonalize A and B and check that im(A) \subseteq im(B)
     [V,a] = eig(A); a = diag(a);
     [W,b] = eig(B); b = diag(b);
     if min(a) < -tol || min(b) < -tol
@@ -55,8 +62,8 @@ if isnumeric(A) && isnumeric(B)
     if any(u(b <= tol) > tol)
         error('D(A||B) is infinity because im(A) is not contained in im(B)');
     else
-        r1 = sum(a(ia).*log(a(ia)));
-        r2 = u(ib)*log(b(ib));
+        r1 = sum(a(ia).*log(a(ia))); % trace(A*logm(A))
+        r2 = u(ib)*log(b(ib)); % trace(A*logm(B))
         cvx_optval = r1 - r2;
     end
 elseif cvx_isconstant(A) || cvx_isconstant(B)
