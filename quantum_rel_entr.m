@@ -66,8 +66,10 @@ if isnumeric(A) && isnumeric(B)
         r2 = u(ib)*log(b(ib)); % trace(A*logm(B))
         cvx_optval = r1 - r2;
     end
-elseif cvx_isconstant(A) || cvx_isconstant(B)
+elseif cvx_isconstant(A)
     cvx_optval = -quantum_entr(A,m,k) - trace_logm(B,A,m,k);
+elseif cvx_isconstant(B)
+    cvx_optval = -quantum_entr(A,m,k) - trace(A*logm(B));
 elseif cvx_isaffine(A) && cvx_isaffine(B)
     n = size(A,1);
     In = eye(n);
