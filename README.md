@@ -48,3 +48,17 @@ cvx_end
 | op_rel_entr_epi_cone | Operator relative entropy cone |
 | matrix_geo_mean_hypo_cone | Matrix geometric mean hypograph cone |
 | matrix_geo_mean_epi_cone | Matrix geometric mean epigraph cone |
+
+# Citing
+
+To cite the package in your work, you can use the following bibtex code:
+
+```
+@article{cvxquad,
+  title={Semidefinite approximations of the matrix logarithm},
+  author={Fawzi, Hamza and Saunderson, James and Parrilo, Pablo A.},
+  year={2018},
+  journal={Foundations of Computational Mathematics},
+  note={Package cvxquad at \url{https://github.com/hfawzi/cvxquad}}
+}
+```
