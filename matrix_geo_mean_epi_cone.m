@@ -1,4 +1,4 @@
-function cvx_optpnt = matrix_geo_mean_epi_cone(sz,t,iscplx)
+function cvx_optpnt = matrix_geo_mean_epi_cone(sz,t,iscplx,fullhyp)
 
 %MATRIX_GEO_MEAN_EPI_CONE    Matrix geometric mean cone.
 %   MATRIX_GEO_MEAN_EPI_CONE(sz,t,iscplx) returns a CVX tuple {A,B,T} of
@@ -19,6 +19,11 @@ function cvx_optpnt = matrix_geo_mean_epi_cone(sz,t,iscplx)
 %     equal in this case. See documentation for CVX's "sets/semidefinite.m"
 %     for more information.
 %
+%   Note on fullhyp: matrix_geo_mean_epi_cone will always return a full
+%   epigraph cone (unlike matrix_geo_mean_hypo_cone) and so this parameter
+%   is not really used. (It is here just for consistency with the hypo_cone
+%   function.)
+%
 %AUTHORS
 %   Hamza Fawzi and James Saunderson
 %
@@ -27,7 +32,7 @@ function cvx_optpnt = matrix_geo_mean_epi_cone(sz,t,iscplx)
 %   geometric means and semidefinite optimization" by Hamza Fawzi and James
 %   Saunderson (arXiv:1512.03401)
 
-if nargin < 2 || nargin > 3
+if nargin < 2 || nargin > 4
     error('Wrong number of arguments');
 end
 
@@ -57,10 +62,10 @@ cvx_begin set
     end
     if t <= 0
         [T A; A Z] == semidefinite(dsz,iscplx);
-        {A,B,Z} == matrix_geo_mean_hypo_cone(sz,-t,iscplx);
+        {A,B,Z} == matrix_geo_mean_hypo_cone(sz,-t,iscplx,0);
     elseif t >= 1
         [T B; B Z] == semidefinite(dsz,iscplx);
-        {A,B,Z} == matrix_geo_mean_hypo_cone(sz,2-t,iscplx);
+        {A,B,Z} == matrix_geo_mean_hypo_cone(sz,2-t,iscplx,0);
     end
 cvx_end
 

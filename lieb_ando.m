@@ -59,12 +59,12 @@ elseif cvx_isaffine(A) && cvx_isaffine(B)
         if t >= 0 && t <= 1
             % Concave function
             maximize (trace(KvKv*T))
-            {kron(A,eye(m)),kron(eye(n),conj(B)),T} == matrix_geo_mean_hypo_cone(n*m,t,iscplx);
+            {kron(A,eye(m)),kron(eye(n),conj(B)),T} == matrix_geo_mean_hypo_cone(n*m,t,iscplx,0);
             %{A,conj(B),T} == lieb_hypo_cone(n,m,t,iscplx);
         elseif (t >= -1 && t <= 0) || (t >= 1 && t <= 2)
             % Convex function
             minimize (trace(KvKv*T))
-            {kron(A,eye(m)),kron(eye(n),conj(B)),T} == matrix_geo_mean_epi_cone(n*m,t,iscplx);
+            {kron(A,eye(m)),kron(eye(n),conj(B)),T} == matrix_geo_mean_epi_cone(n*m,t,iscplx,0);
             %{A,conj(B),T} == ando_epi_cone(n,m,t,iscplx);
         else
             error('t must be between -1 and 2');

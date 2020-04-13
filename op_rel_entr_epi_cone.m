@@ -100,7 +100,7 @@ cvx_begin set
     end
     
     % X #_{1/2^k} Y >= Z
-    {X,Y,Z} == matrix_geo_mean_hypo_cone(sz,1/(2^k),iscplx);
+    {X,Y,Z} == matrix_geo_mean_hypo_cone(sz,1/(2^k),iscplx,0);
 
     for ii=1:m
         sr.type = '()';

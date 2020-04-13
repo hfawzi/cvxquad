@@ -52,11 +52,11 @@ elseif cvx_isaffine(A)
         if t >= 0 && t <= 1
             % Concave function
             maximize trace(C*T)
-            {eye(n),A,T} == matrix_geo_mean_hypo_cone(n,t,iscplx);
+            {eye(n),A,T} == matrix_geo_mean_hypo_cone(n,t,iscplx,0);
         else
             % Convex function
             minimize trace(C*T)
-            {eye(n),A,T} == matrix_geo_mean_epi_cone(n,t,iscplx);
+            {eye(n),A,T} == matrix_geo_mean_epi_cone(n,t,iscplx,0);
         end
     cvx_end    
 else
