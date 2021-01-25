@@ -66,7 +66,7 @@ elseif cvx_isaffine(X)
             variable TAU(n,n) symmetric
         end
         % -logm(X) <= TAU
-        {eye(n),X,TAU} == op_rel_entr_epi_cone(n,iscplx,k,m);
+        {eye(n),X,TAU} == op_rel_entr_epi_cone(n,iscplx,m,k);
         maximize -trace(C*TAU)
     cvx_end
 else
