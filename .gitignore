@@ -1,2 +1,9 @@
 
 *.m~
+doc/log_approx_bounds.synctex.gz
+doc/log_approx_bounds.tex
+doc/log_approx_bounds.out
+doc/log_approx_bounds.log
+doc/log_approx_bounds.blg
+doc/log_approx_bounds.bbl
+doc/log_approx_bounds.aux

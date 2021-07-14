@@ -1,4 +1,4 @@
-function cvx_optval = trace_logm(X,C,m,k)
+function cvx_optval = trace_logm(X,C,m,k,apx)
 
 %TRACE_LOGM    Trace of logarithm
 %   TRACE_LOGM(X) returns trace(logm(X)) where X is a positive definite
@@ -10,10 +10,21 @@ function cvx_optval = trace_logm(X,C,m,k)
 %      TRACE_LOGM(X,C) is concave in X, provided C is a (fixed) positive
 %      semidefinite matrix.
 %      This function implements the semidefinite programming approximation
-%      given in the reference below.  Parameters m and k control the
-%      accuracy of this approximation: m is the number of quadrature nodes
-%      to use and k the number of square-roots to take. See reference for
-%      more details. Default (m,k) = (3,3).
+%      given in the reference below.
+%
+%      Parameters m and k control the accuracy of this approximation:
+%      m is the number of quadrature nodes to use and k the number of
+%      square-roots to take. See reference for more details.
+%      Default (m,k) = (3,3).
+%
+%      Parameter apx indicates which approximation r of logm(X) to use:
+%      - apx = +1: Upper approximation (logm(X) <= r(X))
+%      - apx = -1: Lower approximation (r(X) <= logm(X))
+%      - apx = 0 (Default): Pade approximation (neither upper nor lower),
+%                           but slightly better accuracy than apx=+1 or -1.
+%      The upper and lower approximation are based on rational functions
+%      derived from Gauss-Radau quadrature, see documentation in the 'doc'
+%      folder.
 %
 %   REQUIRES: op_rel_entr_epi_cone
 %   Implementation uses trace(C*logm(X)) = -trace(C*D_{op}(I||X))
@@ -27,8 +38,8 @@ function cvx_optval = trace_logm(X,C,m,k)
 %   This code is based on the paper: "Semidefinite approximations of matrix
 %   logarithm" by Hamza Fawzi, James Saunderson and Pablo A. Parrilo
 
-if nargin < 1 || nargin > 4
-    error('Wrong number of arguments');
+if nargin < 1
+    error('Not enough input arguments');
 end
 
 if ~ismatrix(X) || size(X,1) ~= size(X,2)
@@ -52,6 +63,11 @@ if nargin == 2
     k = 3;
 end
 
+if nargin < 5
+    % By default use Pade approximant
+    apx = 0;
+end
+
 if isnumeric(X)
     cvx_optval = -quantum_rel_entr(C,X)+quantum_rel_entr(C,eye(size(C,1)));
 elseif cvx_isconstant(X)
@@ -65,8 +81,10 @@ elseif cvx_isaffine(X)
         else
             variable TAU(n,n) symmetric
         end
-        % -logm(X) <= TAU
-        {eye(n),X,TAU} == op_rel_entr_epi_cone(n,iscplx,k,m);
+        % Since trace_logm(X,C) = -tr[C*D_{op}(I||X)], to get an
+        % upper/lower bound (resp.) on trace_logm, we need a lower/upper
+        % bound (resp.) on D_{op}. That's why we use -apx and not apx
+        {eye(n),X,TAU} == op_rel_entr_epi_cone(n,iscplx,m,k,eye(n),-apx); % -logm(X) <= TAU
         maximize -trace(C*TAU)
     cvx_end
 else

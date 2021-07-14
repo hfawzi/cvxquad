@@ -1,6 +1,6 @@
 # CVXQUAD
 
-CVXQUAD is a collection of functions to be used with the MATLAB-based convex optimization tool [CVX](http://www.cvxr.com/cvx/). It implements a new approximation strategy to treat the exponential cone as well as various functions based on matrix logarithm using symmetric cone solvers. This package is based on the paper:
+CVXQUAD is a collection of functions to be used with the MATLAB-based convex optimization tool [CVX](http://www.cvxr.com/cvx/). It augments CVX with various convex/concave functions based on matrix logarithm such as the von Neumann entropy, or the quantum relative entropy (see below for list of functions). This package is based on the paper:
 
 ```
 Semidefinite approximations of matrix logarithm
@@ -9,11 +9,18 @@ Hamza Fawzi, James Saunderson and Pablo A. Parrilo
 
 available at https://arxiv.org/abs/1705.00812.
 
+# News
+
+*July 14, 2021*: Added support for approximations that are formal upper or lower bounds on log -- the Pade approximations from the paper above are neither upper nor lower bounds. The new approximations are based on Gauss-Radau quadrature, see [doc/log_approx_bounds.pdf](doc/log_approx_bounds.pdf) for more details. Functions quantum_entr, quantum_rel_entr, trace_logm and op_rel_entr_epi_cone now have an additional parameter, 'apx', which can be used to specify which approximation to be used (apx=-1,0,+1).
+
 # Installation
 
 Unpack the zip file https://github.com/hfawzi/cvxquad/archive/master.zip and add the folder to your MATLAB path.
 
 ## Replacing successive approximation
+
+*Update*: CVX 2.2 can now handle the exponential cone natively when used with Mosek 9. See [CVX's documentation](http://web.cvxr.com/cvx/doc/advanced.html#the-successive-approximation-method). If you have access to Mosek, no need to use any approximations.
+
 To replace the successive approximation functionality of CVX whenever the exponential cone is used (e.g., when using rel_entr or in GP mode), copy the file "exponential/exponential.m" to the folder "sets" in your CVX installation (you may want to keep a copy of the existing file in case you want to revert to the successive approximation method).
 
 # Example

@@ -1,4 +1,4 @@
-function cvx_optval = quantum_rel_entr(A,B,m,k)
+function cvx_optval = quantum_rel_entr(A,B,m,k,apx)
 
 %QUANTUM_REL_ENTR    Quantum relative entropy
 %   QUANTUM_REL_ENTR(A,B) returns trace(A*(logm(A)-logm(B))) where A and B
@@ -9,10 +9,22 @@ function cvx_optval = quantum_rel_entr(A,B,m,k)
 %   Disciplined convex programming information:
 %      QUANTUM_REL_ENTR(A,B) is convex (jointly) in (A,B)
 %      This function implements the semidefinite programming approximation
-%      given in the reference below.  Parameters m and k control the
-%      accuracy of this approximation: m is the number of quadrature nodes
-%      to use and k the number of square-roots to take. See reference for
-%      more details. Default (m,k) = (3,3).
+%      given in the reference below.
+%
+%      Parameters m and k control the accuracy of this approximation:
+%      m is the number of quadrature nodes to use and k the number of
+%      square-roots to take. See reference for more details.
+%      Default (m,k) = (3,3).
+%
+%      Parameter apx indicates which approximation r of the relative
+%      entropy function to use:
+%      - apx = +1: Upper approximation (D(A|B) <= r(A,B))
+%      - apx = -1: Lower approximation (r(A,B) <= D(A|B))
+%      - apx = 0 (Default): Pade approximation (neither upper nor lower),
+%                           but slightly better accuracy than apx=+1 or -1.
+%      The upper and lower approximation are based on rational functions
+%      derived from Gauss-Radau quadrature, see documentation in the 'doc'
+%      folder.
 %
 %   REQUIRES: op_rel_entr_epi_cone
 %   Implementation uses the expression
@@ -38,6 +50,11 @@ end
 if nargin == 2
     m = 3;
     k = 3;
+end
+
+if nargin < 5
+    % By default use Pade approximant
+    apx = 0;
 end
 
 if isnumeric(A) && isnumeric(B)
@@ -67,9 +84,9 @@ if isnumeric(A) && isnumeric(B)
         cvx_optval = r1 - r2;
     end
 elseif cvx_isconstant(A)
-    cvx_optval = -quantum_entr(A,m,k) - trace_logm(B,A,m,k);
+    cvx_optval = -quantum_entr(A,m,k) - trace_logm(B,A,m,k,-apx);
 elseif cvx_isconstant(B)
-    cvx_optval = -quantum_entr(A,m,k) - trace(A*logm(B));
+    cvx_optval = -quantum_entr(A,m,k,-apx) - trace(A*logm(B));
 elseif cvx_isaffine(A) && cvx_isaffine(B)
     n = size(A,1);
     In = eye(n);
@@ -77,7 +94,7 @@ elseif cvx_isaffine(A) && cvx_isaffine(B)
     iscplx = ~isreal(A) || ~isreal(B);
     cvx_begin
         variable tau;
-        {kron(A,eye(n)),kron(eye(n),conj(B)),tau} == op_rel_entr_epi_cone(n^2,iscplx,m,k,e);
+        {kron(A,eye(n)),kron(eye(n),conj(B)),tau} == op_rel_entr_epi_cone(n^2,iscplx,m,k,e,apx);
         minimize tau;
     cvx_end
 else
